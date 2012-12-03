@@ -1,5 +1,6 @@
 #!/bin/sh
 # Starter script for Clojure liverepl
+# NB. This doesn't work with the Leiningen-ized version yet.
 
 [ -z "$JDK_HOME" ] && JDK_HOME=/usr/lib/jvm/default-java
 LIVEREPL_HOME="$(cd -P -- "$(dirname -- "$0")" && pwd -P)"

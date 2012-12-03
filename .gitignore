@@ -4,3 +4,5 @@
 **/*.jardesc
 **/.settings/**
 liverepl-server/lib/clojure.jar
+target
+pom.xml
