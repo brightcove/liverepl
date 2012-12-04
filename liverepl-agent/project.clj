@@ -1,4 +1,4 @@
-(defproject com.brightcove.liverepl/liverepl-agent "0.1.0"
+(defproject com.brightcove.liverepl/liverepl-agent "0.1.1-SNAPSHOT"
   :description "Brightcove local version of liverepl-agent"
   :license {:name "Copyright (C) 2009 David J. Powell.  See GitHub for license."}
   :url "https://github.com/djpowell/liverepl"
