@@ -25,15 +25,20 @@
         - Passes "L" for classloader ID (to list classloaders) if none
           specified
     - (loadAgent waits for agent to complete)
-    - Start client.Console (needed for listing classloaders not just
-      REPL)
+    - Run and block on client.Console (needed for listing classloaders
+      not just REPL) until it closes.
+    - Adds shutdown hook to detach from target VM
 - client.Console
     - Starts two threads:
-        - ConsoleHandler reads keyboard input and writes to target
+        - console-handler reads keyboard input and writes to target
           JVM's socket
-        - SocketHandler reads responses from target JVM and writes to
+        - socket-handler reads responses from target JVM and writes to
           stdout
-    - Waits for socket to close
+    - Waits for socket-handler to close
+    - Waits for console-handler to close
+    - When either handler thread dies it interrupts the main thread;
+      when the main thread leaves the try/catch it closes the socket,
+      which will kill each handler thread.
 - target JVM
     - Loads agent jar
     - calls Agent-Class (agent.Agent) agentmain method
@@ -54,6 +59,7 @@
     - server.repl launches clojure.main/repl in a thread
         - Also launches killer thread to close the socket if the REPL
           failed to launch after 10 seconds.
+        - REPL thread dies when socket disconnects
     - returns, handing control back to client.Main
 
 
