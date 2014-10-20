@@ -4,9 +4,13 @@
     - Attach agent to target JVM and provide basic I/O shuttling
     - Requires only tools.jar
 - Internal (run as agent in target JVM):
-    - Sets up classloaders just long enough to launch a REPL thread, then exits
-    - Uses port established and discarded previously by external code
-    - Requires Clojure
+    - Agent:
+        - Sets up classloaders just long enough to launch a REPL thread, then exits
+        - Uses port established and discarded previously by external code
+        - Requires discovery code
+    - REPL
+        - Open a socket and start a REPL thread.
+        - Requires Clojure
 
 # Control flow
 
