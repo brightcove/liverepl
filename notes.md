@@ -8,6 +8,10 @@
         - Sets up classloaders just long enough to launch a REPL thread, then exits
         - Uses port established and discarded previously by external code
         - Requires discovery code
+        - NB: Agents are not reloadable. If you compile a new agent with the same
+          classname, it will not shadow any existing agent that has been loaded
+          into the JVM previously. This seems to indicate that the injected JAR
+          cannot be GC'd.
     - REPL
         - Open a socket and start a REPL thread.
         - Requires Clojure
