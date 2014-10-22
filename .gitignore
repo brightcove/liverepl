@@ -1,8 +1,14 @@
+# IDE settings
 **/.classpath
 **/.project
 **/.settings
 **/*.jardesc
 **/.settings/**
-liverepl-server/lib/clojure.jar
-target
-pom.xml
+
+# Manually added artifacts
+/liverepl-server/lib/clojure.jar
+/jars/
+
+# Build artifacts
+/*/target/
+/*/pom.xml
