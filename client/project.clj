@@ -1,5 +1,5 @@
 (defproject com.brightcove.liverepl/client "0.1.1-SNAPSHOT"
-  :description "LiveREPL client"
+  :description "LiveRepl client"
   :license {:name "MIT License"
             :distribution :repo
             :comments "Copyright (C) 2009 David J. Powell and others. See README for contributors."}
