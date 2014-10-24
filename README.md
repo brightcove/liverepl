@@ -31,7 +31,7 @@ Operation
 
 Call liverepl.sh as follows:
 
-```
+```bash
 export JDK_HOME=/usr/lib/jvm/java-7-oracle
 ./liverepl.sh
 ```
@@ -39,23 +39,29 @@ export JDK_HOME=/usr/lib/jvm/java-7-oracle
 To see a list of running Java processes on the system, and their
 process ids, enter:
 
-   liverepl.sh
+```bash
+liverepl.sh
+```
 
 To see the available ClassLoaders for a specific process, enter:
 
-   liverepl.sh <pid>
+```bash
+liverepl.sh <pid>
+```
 
-      -- where the pid is the process id for the process, obtained in
-         the step above.
+where the pid is the process id for the process, obtained in the step
+above.
 
 To connect a repl to the process, enter:
 
-   liverepl.sh <pid> <classloader-id>
+```bash
+liverepl.sh <pid> <classloader-id>
+```
 
-      -- where the pid is the process id for the process.
-      -- and the classloader-id was obtained in the step above.
+where the pid is the process id for the process and the classloader-id
+was obtained in the step above.
 
-If you aren't sure which ClassLoader to use, try '0', which will
+If you aren't sure which ClassLoader to use, try `0`, which will
 always be the System ClassLoader.
 
 If the directory `./jars/` is present in the same location as
