@@ -1,14 +1,13 @@
-#!/bin/sh
+#!/bin/bash
 # Starter script for Clojure liverepl
-# NB. This doesn't work with the Leiningen-ized version yet.
 
 [ -z "$JDK_HOME" ] && JDK_HOME=/usr/lib/jvm/default-java
 LIVEREPL_HOME="$(cd -P -- "$(dirname -- "$0")" && pwd -P)"
 
 MAIN=net.djpowell.liverepl.client.Main
-CLOJURE_JAR=$(find $LIVEREPL_HOME/build -name 'clojure-*[0-9].jar' | head -1)
-AGENT_JAR="$LIVEREPL_HOME/build/liverepl-agent.jar"
-SERVER_JAR="$LIVEREPL_HOME/build/liverepl-server.jar"
+CLIENT_JAR="$LIVEREPL_HOME/client/target/liverepl-client-standalone.jar"
+AGENT_JAR="$LIVEREPL_HOME/agent/target/liverepl-agent.jar"
+SERVER_JAR="$LIVEREPL_HOME/server/target/liverepl-server-standalone.jar"
 EXTRA_JARS="$LIVEREPL_HOME/jars/"
 
 if [ "Darwin" = "`uname -s`" ]; then
@@ -29,9 +28,9 @@ if [ "$TERM" != "dumb" ]; then
     fi
 fi
 
-CLASSPATH="$CLASSPATH:$AGENT_JAR"
+CLASSPATH="$CLASSPATH:$CLIENT_JAR:$AGENT_JAR"
 
-${WRAP}java -cp $CLASSPATH $MAIN "$CLOJURE_JAR" "$AGENT_JAR" "$SERVER_JAR" "$EXTRA_JARS" "$@"
+${WRAP}java -cp $CLASSPATH $MAIN "$AGENT_JAR" "$SERVER_JAR" "$EXTRA_JARS" "$@"
 
 
 

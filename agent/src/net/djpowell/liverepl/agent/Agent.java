@@ -11,11 +11,20 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Logger;
 
-import net.djpowell.liverepl.client.Main;
 import net.djpowell.liverepl.discovery.ClassLoaderInfo;
 import net.djpowell.liverepl.discovery.Discovery;
 
 public class Agent {
+
+    // bind to localhost to keep things more secure
+    public static final InetAddress LOCALHOST;
+    static {
+        try {
+            LOCALHOST = InetAddress.getByAddress(new byte[] {127, 0, 0, 1});
+        } catch (UnknownHostException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     private static final Discovery discovery = new Discovery();
 
@@ -46,7 +55,7 @@ public class Agent {
     }
 
     public static void runAfterConnect(int port, int connectTimeout, String threadName, final ConnectNotifyingTask task) throws Exception {
-        final ServerSocket serverSocket = new ServerSocket(port, 0, Main.LOCALHOST);
+        final ServerSocket serverSocket = new ServerSocket(port, 0, LOCALHOST);
         final AtomicBoolean connected = new AtomicBoolean(false);
         Thread taskThread = new Thread(new Runnable() {
             public void run() {
@@ -107,10 +116,10 @@ public class Agent {
         Thread.currentThread().setContextClassLoader(old);
     }
 
-    private static boolean isClojureLoaded() {
+    private static boolean isServerLoaded() {
         try {
             ClassLoader cl = Thread.currentThread().getContextClassLoader();
-            cl.loadClass("clojure.lang.RT");
+            cl.loadClass("net.djpowell.liverepl.server.Repl");
             return true;
         } catch (ClassNotFoundException e) {
             return false;
@@ -121,13 +130,12 @@ public class Agent {
         TRC.fine("Started Attach agent");
 
         StringTokenizer stok = new StringTokenizer(agentArgs, "\n");
-        if (stok.countTokens() != 5) {
+        if (stok.countTokens() != 4) {
             throw new RuntimeException("Invalid parameters: " + agentArgs);
         }
         
         int port = Integer.parseInt(stok.nextToken());
         TRC.fine("Port: " + port);
-        String clojurePath = stok.nextToken();
         String serverPath = stok.nextToken();
         String jarsPath = stok.nextToken();
         String classLoaderId = stok.nextToken();
@@ -137,14 +145,14 @@ public class Agent {
             return;
         }
 
-        boolean clojureLoaded = isClojureLoaded();
-        TRC.fine("Clojure is " + (clojureLoaded ? "" : "not ") + "loaded");
+        boolean serverLoaded = isServerLoaded();
+        TRC.fine("Server is " + (serverLoaded ? "" : "not ") + "loaded");
 
         List<URL> urls;
-        if (clojureLoaded) {
-            urls = getJarUrls(serverPath);
+        if (serverLoaded) {
+            urls = new ArrayList<URL>();
         } else {
-            urls = getJarUrls(clojurePath, serverPath);
+            urls = getJarUrls(serverPath);
         }
         File jarsDir = new File(jarsPath);
         if (jarsDir.exists()) {
@@ -162,8 +170,8 @@ public class Agent {
 
         ClassLoader old = pushClassLoader(urls, classLoaderId);
         try {
-            if (!clojureLoaded) { // if clojure wasn't loaded before, print current status
-                TRC.fine("Clojure is " + (isClojureLoaded() ? "" : "not ") + "loaded");
+            if (!serverLoaded) { // if server wasn't loaded before, print current status
+                TRC.fine("Server is " + (isServerLoaded() ? "" : "not ") + "loaded");
             }
             startRepl(port, inst);
         } finally {
@@ -195,7 +203,7 @@ public class Agent {
             ClassLoader cl = Thread.currentThread().getContextClassLoader();
             Class<?> repl = Class.forName("net.djpowell.liverepl.server.Repl", true, cl);
             Method method = repl.getMethod("main", InetAddress.class, Integer.TYPE, Instrumentation.class);
-            method.invoke(null, Main.LOCALHOST, port, inst);
+            method.invoke(null, LOCALHOST, port, inst);
         } catch (RuntimeException e) {
 	    throw e;
 	} catch (Exception e) {

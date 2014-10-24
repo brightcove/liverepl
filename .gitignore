@@ -1,12 +1,11 @@
 # IDE settings
-**/.classpath
-**/.project
-**/.settings
-**/*.jardesc
-**/.settings/**
+/*/.classpath
+/*/.project
+/*/.settings
+/*/*.jardesc
+/*/.settings/
 
 # Manually added artifacts
-/liverepl-server/lib/clojure.jar
 /jars/
 
 # Build artifacts
